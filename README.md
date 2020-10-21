@@ -105,8 +105,6 @@ O projeto tem até a seguinte data: `DD/MM/YYYY - 14:00h`. Para ser entregue a a
 
 ## Requisitos Obrigatórios:
 
-### 💡Veja o exemplo a seguir de como o projeto pode se parecer depois de pronto. Lembre-se que você pode ~~e deve~~ ir além para deixar o projeto com a sua cara e impressionar à todos e a todas!
-
 ## ⚠️ Leia-os atentamente e siga à risca o que for pedido. ⚠️
 
 ###  Todos os seus endpoints devem estar no padrão REST
