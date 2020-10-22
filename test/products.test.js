@@ -154,9 +154,11 @@ describe('2 - Crie um endpoint para listar os produtos', () => {
   beforeEach(async () => {
     await db.collection('products').deleteMany({});
     await db.collection('sales').deleteMany({});
-    const products = [{ name: 'Martelo de Thor', quantity: 10 },
+    const products = [
+      { name: 'Martelo de Thor', quantity: 10 },
       { name: 'Traje de encolhimento', quantity: 20 },
-      { name: 'Escudo do Capitão América', quantity: 30 }];
+      { name: 'Escudo do Capitão América', quantity: 30 },
+    ];
     await db.collection('products').insertMany(products);
   });
 
@@ -192,7 +194,8 @@ describe('2 - Crie um endpoint para listar os produtos', () => {
   });
 
   it('Será validado que não é possível listar um produto que não existe', async () => {
-    await frisby.get(`${url}/products/${invalidId}`)
+    await frisby
+      .get(`${url}/products/${invalidId}`)
       .expect('status', 422)
       .then((secondResponse) => {
         const { json } = secondResponse;
@@ -218,9 +221,11 @@ describe('2 - Crie um endpoint para listar os produtos', () => {
         responseProductId = result._id;
       });
 
-    await frisby.get(`${url}/products/${responseProductId}`)
+    await frisby
+      .get(`${url}/products/${responseProductId}`)
       .expect('status', 200)
       .then((secondResponse) => {
+        console.log('MEU', secondResponse);
         const { json } = secondResponse;
         const productName = json.name;
         const quantityProduct = json.quantity;
@@ -272,8 +277,8 @@ describe('3 - Crie um endpoint para atualizar um produto', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby.put(`${url}/products/${resultProductId}`,
-      {
+    await frisby
+      .put(`${url}/products/${resultProductId}`, {
         name: 'Mar',
         quantity: 10,
       })
@@ -298,8 +303,8 @@ describe('3 - Crie um endpoint para atualizar um produto', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby.put(`${url}/products/${resultProductId}`,
-      {
+    await frisby
+      .put(`${url}/products/${resultProductId}`, {
         name: 'Martelo de Thor',
         quantity: -1,
       })
@@ -324,8 +329,8 @@ describe('3 - Crie um endpoint para atualizar um produto', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby.put(`${url}/products/${resultProductId}`,
-      {
+    await frisby
+      .put(`${url}/products/${resultProductId}`, {
         name: 'Martelo de Thor',
         quantity: 0,
       })
@@ -350,8 +355,8 @@ describe('3 - Crie um endpoint para atualizar um produto', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby.put(`${url}/products/${resultProductId}`,
-      {
+    await frisby
+      .put(`${url}/products/${resultProductId}`, {
         name: 'Martelo de Thor',
         quantity: 'string',
       })
@@ -376,8 +381,8 @@ describe('3 - Crie um endpoint para atualizar um produto', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby.put(`${url}/products/${resultProductId}`,
-      {
+    await frisby
+      .put(`${url}/products/${resultProductId}`, {
         name: 'Machado de Thor',
         quantity: 20,
       })
@@ -434,10 +439,10 @@ describe('4 - Crie um endpoint para deletar um produto', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby.delete(`${url}/products/${resultProductId}`)
-      .expect('status', 200);
+    await frisby.delete(`${url}/products/${resultProductId}`).expect('status', 200);
 
-    await frisby.get(`${url}/products/`)
+    await frisby
+      .get(`${url}/products/`)
       .expect('status', 200)
       .then((response) => {
         const { body } = response;

@@ -13,7 +13,7 @@ const findByName = async (product) =>
 const getAll = async () => connection().then((db) => db.collection('products').find().toArray());
 
 const getById = async (id) =>
-  connection().then((db) => db.collection('products').findOne(ObjectId(id)));
+  connection().then((db) => db.collection('products').findOne({ _id: ObjectId(id) }));
 
 module.exports = {
   addProduct,
