@@ -23,6 +23,21 @@ product.post(
   }),
 );
 
+// Envia uma alteração para o Banco
+product.put(
+  '/:id',
+  rescue(async (req, res) => {
+    const { name, quantity } = req.body;
+    const { id } = req.params;
+    const isValid = await validation(name, quantity);
+    if (isValid.status) {
+      const result = await productsModels.updateId(id, name, quantity);
+      return res.status(200).json({ ...result });
+    }
+    res.status(422).json({ err: { code: 'invalid_data', message: isValid.message } });
+  }),
+);
+
 // Buscar Por ID expecifico REQ2
 product.get(
   '/:id',
@@ -36,6 +51,7 @@ product.get(
   }),
 );
 
+// Busca Todos os Produtos no banco
 product.get(
   '/',
   rescue(async (req, res) => {
