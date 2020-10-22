@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const rescue = require('express-rescue');
 const { ObjectId } = require('mongodb');
-const products = require('../models/products');
 const productsModels = require('../models/products');
 
 const validation = require('../services/validation');
@@ -9,6 +8,7 @@ const validation = require('../services/validation');
 
 const product = Router();
 
+// Envia um novo produto via POST
 product.post(
   '/',
   rescue(async (req, res) => {
