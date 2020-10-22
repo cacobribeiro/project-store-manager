@@ -12,8 +12,10 @@ const findByName = async (product) =>
 
 const getAll = async () => connection().then((db) => db.collection('products').find().toArray());
 
-const getById = async (id) =>
-  connection().then((db) => db.collection('products').findOne({ _id: ObjectId(id) }));
+const getById = async (id) => {
+  if (!ObjectId.isValid(id)) return false;
+  return connection().then((db) => db.collection('products').findOne({ _id: ObjectId(id) }));
+};
 
 const updateId = async (id, name, quantity) => {
   connection().then((db) =>
@@ -22,10 +24,18 @@ const updateId = async (id, name, quantity) => {
   return getById(id);
 };
 
+const removeId = async (id) => {
+  if (!(await getById(id))) return false;
+  if (!ObjectId.isValid(id)) return false;
+  connection().then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
+  return true;
+};
+
 module.exports = {
   addProduct,
   findByName,
   getAll,
   getById,
   updateId,
+  removeId,
 };

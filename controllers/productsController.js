@@ -19,7 +19,7 @@ product.post(
       const result = await productsModels.addProduct(name, quantity);
       return res.status(201).json({ ...result });
     }
-    res.status(422).json({ err: { code: 'invalid_data', message: isValid.message } });
+    return res.status(422).json({ err: { code: 'invalid_data', message: isValid.message } });
   }),
 );
 
@@ -34,7 +34,7 @@ product.put(
       const result = await productsModels.updateId(id, name, quantity);
       return res.status(200).json({ ...result });
     }
-    res.status(422).json({ err: { code: 'invalid_data', message: isValid.message } });
+    return res.status(422).json({ err: { code: 'invalid_data', message: isValid.message } });
   }),
 );
 
@@ -44,7 +44,7 @@ product.get(
   rescue(async (req, res) => {
     const { id } = req.params;
     if (!ObjectId.isValid(id) || id === null) {
-      res.status(422).json({ err: { code: 'invalid_data', message: 'Wrong id format' } });
+      return res.status(422).json({ err: { code: 'invalid_data', message: 'Wrong id format' } });
     }
     const products = await productsModels.getById(id);
     return res.status(200).json({ ...products });
@@ -59,8 +59,22 @@ product.get(
       const products = await productsModels.getAll();
       return res.status(200).json({ products });
     } catch (error) {
-      res.status(422).json({ err: { code: 'invalid_data', message: error } });
+      return res.status(422).json({ err: { code: 'invalid_data', message: error } });
     }
+  }),
+);
+
+// Deletar um produto
+product.delete(
+  '/:id',
+  rescue(async (req, res) => {
+    const { id } = req.params;
+    const product = await productsModels.getById(id);
+    const results = await productsModels.removeId(id);
+    if (results) {
+      return res.status(200).json({ ...product });
+    }
+    return res.status(422).json({ err: { code: 'invalid_data', message: 'Wrong id format' } });
   }),
 );
 
