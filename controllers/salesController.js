@@ -12,13 +12,10 @@ const sales = Router();
 sales.post(
   '/',
   rescue(async (req, res) => {
-    const [{ productId, quantity }] = req.body;
-    const alreadyExists = await salesModels.findById(productId);
-    console.log(alreadyExists);
-    const isValid = await validationSales(productId, quantity, alreadyExists);
+    const [{ quantity }] = req.body;
+    const isValid = await validationSales(quantity);
     if (isValid.status) {
-      const result = await salesModels.addProduct(productId, quantity);
-      console.log(result);
+      const result = await salesModels.addProduct(req.body);
       return res.status(200).json({ ...result });
     }
     return res.status(422).json({ err: { code: 'invalid_data', message: isValid.message } });
@@ -29,18 +26,20 @@ sales.post(
 sales.put(
   '/:id',
   rescue(async (req, res) => {
-    const { productId, quantity } = req.body;
+    const [{ quantity }] = req.body;
     const { id } = req.params;
-    const isValid = await validationSales(productId, quantity);
+    const isValid = await validationSales(quantity);
     if (isValid.status) {
-      const result = await salesModels.updateId(id, productId, quantity);
-      return res.status(200).json({ ...result });
+      await salesModels.updateId(id, req.body);
+      const salesUpdated = await salesModels.getById(id);
+      console.log(salesUpdated);
+
+      return res.status(200).json({ ...salesUpdated });
     }
     return res.status(422).json({ err: { code: 'invalid_data', message: isValid.message } });
   }),
 );
 
-// Buscar Por ID expecifico REQ2
 sales.get(
   '/:id',
   rescue(async (req, res) => {
@@ -70,13 +69,22 @@ sales.get(
 sales.delete(
   '/:id',
   rescue(async (req, res) => {
-    const { id } = req.params;
-    const product = await salesModels.getById(id);
-    const results = await salesModels.removeId(id);
-    if (results) {
-      return res.status(200).json({ ...product });
+    try {
+      const { id } = req.params;
+      const item = await salesModels.getById(id);
+      console.log(item);
+
+      if (item === null) {
+        return res.status(404).json({ err: { code: 'not_found', message: 'not found' } });
+      }
+
+      await salesModels.removeId(id);
+      return res.status(200).json(item);
+    } catch (error) {
+      return res
+        .status(422)
+        .json({ err: { code: 'invalid_data', message: 'Wrong sale ID format' } });
     }
-    return res.status(422).json({ err: { code: 'invalid_data', message: 'Wrong sale ID format' } });
   }),
 );
 
