@@ -57,8 +57,8 @@ sales.get(
   '/',
   rescue(async (req, res) => {
     try {
-      const allSales = await salesModels.getAll();
-      return res.status(200).json({ allSales });
+      const sales = await salesModels.getAll();
+      return res.status(200).json({ sales });
     } catch (error) {
       return res.status(422).json({ err: { code: 'invalid_data', message: error } });
     }
@@ -69,22 +69,13 @@ sales.get(
 sales.delete(
   '/:id',
   rescue(async (req, res) => {
-    try {
-      const { id } = req.params;
-      const item = await salesModels.getById(id);
-      console.log(item);
-
-      if (item === null) {
-        return res.status(404).json({ err: { code: 'not_found', message: 'not found' } });
-      }
-
-      await salesModels.removeId(id);
-      return res.status(200).json(item);
-    } catch (error) {
-      return res
-        .status(422)
-        .json({ err: { code: 'invalid_data', message: 'Wrong sale ID format' } });
+    const { id } = req.params;
+    const salesId = await salesModels.getById(id);
+    const results = await salesModels.removeId(id);
+    if (results) {
+      return res.status(200).json(salesId);
     }
+    return res.status(422).json({ err: { code: 'invalid_data', message: 'Wrong sale ID format' } });
   }),
 );
 

@@ -23,8 +23,11 @@ const updateId = async (id, itensSold) => {
   return getById(id);
 };
 
-const removeId = async (id) =>
+const removeId = async (id) => {
+  if (!(await getById(id))) return false;
   connection().then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
+  return true;
+};
 
 module.exports = {
   addProduct,
