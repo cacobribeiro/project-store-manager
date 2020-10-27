@@ -71,11 +71,19 @@ sales.delete(
   rescue(async (req, res) => {
     const { id } = req.params;
     const salesId = await salesModels.getById(id);
-    const results = await salesModels.removeId(id);
-    if (results) {
-      return res.status(200).json(salesId);
+    console.log('saleid', salesId);
+    if (!salesId) {
+      return res
+        .status(422)
+        .json({ err: { code: 'invalid_data', message: 'Wrong sale ID format' } });
     }
-    return res.status(422).json({ err: { code: 'invalid_data', message: 'Wrong sale ID format' } });
+
+    try {
+      await salesModels.removeId(id);
+      return res.status(200).json(salesId);
+    } catch (error) {
+      return res.status(404).json({ err: { code: 'not_found', message: 'Sale not found' } });
+    }
   }),
 );
 

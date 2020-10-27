@@ -24,8 +24,7 @@ const updateId = async (id, itensSold) => {
 };
 
 const removeId = async (id) => {
-  if (!(await getById(id))) return false;
-  connection().then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
+  await connection().then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
   return true;
 };
 
