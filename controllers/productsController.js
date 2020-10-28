@@ -69,10 +69,10 @@ product.delete(
   '/:id',
   rescue(async (req, res) => {
     const { id } = req.params;
-    const product = await productsModels.getById(id);
+    const productId = await productsModels.getById(id);
     const results = await productsModels.removeId(id);
     if (results) {
-      return res.status(200).json({ ...product });
+      return res.status(200).json({ ...productId });
     }
     return res.status(422).json({ err: { code: 'invalid_data', message: 'Wrong id format' } });
   }),

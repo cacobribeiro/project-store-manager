@@ -60,8 +60,8 @@ sales.get(
   '/',
   rescue(async (req, res) => {
     try {
-      const sales = await salesModels.getAll();
-      return res.status(200).json({ sales });
+      const allSales = await salesModels.getAll();
+      return res.status(200).json({ sales: allSales });
     } catch (error) {
       return res.status(422).json({ err: { code: 'invalid_data', message: error } });
     }
