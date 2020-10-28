@@ -48,6 +48,9 @@ sales.get(
       return res.status(422).json({ err: { code: 'invalid_data', message: 'Wrong id format' } });
     }
     const products = await salesModels.getById(id);
+    if (!products) {
+      return res.status(404).json({ err: { code: 'not_found', message: 'Sale not found' } });
+    }
     return res.status(200).json({ ...products });
   }),
 );
