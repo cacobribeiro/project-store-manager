@@ -44,7 +44,7 @@ sales.get(
   '/:id',
   rescue(async (req, res) => {
     const { id } = req.params;
-    if (!ObjectId.isValid(id) || id === null) {
+    if (!ObjectId.isValid(id) || !id) {
       return res.status(422).json({ err: { code: 'invalid_data', message: 'Wrong id format' } });
     }
     const products = await salesModels.getById(id);
